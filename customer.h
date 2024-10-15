@@ -10,11 +10,10 @@ typedef struct {
 	char Pnum[100];		// 핸드폰번호
 }customer;
 
-extern customer** g_customer;
-extern int numofcustomer;
+
 
 void Join_Customer();
 customer* Register_Customer();
-void Customer_Sort();
+void Sort_Customer();
 bool Dup_C_num(char*);
 #endif

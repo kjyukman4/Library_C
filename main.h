@@ -4,12 +4,20 @@
 #include "borrow.h"
 #include "customer.h"
 
-typedef enum MMENU { JOIN = 1, LOGIN, EXIT} MM;
-typedef enum AMENU { REGISTER = 1, BDELETE, RENTAL, RETURN, SEARCH, CLIST, LOGOUT} AM;
+namespace MM { 
+	enum MMENU { JOIN = 1, LOGIN, EXIT }; 
+}
+namespace AM {
+	enum AMENU{ REGISTER = 1, BDELETE, RENTAL, RETURN, SEARCH, CLIST, LOGOUT };
+}
+namespace CM {
+	enum CMENU { SEARCH = 1, BLIST, MODIFY, DELETE, LOGOUT, QUIT };
+}
 
-
-int mainmenu();
+int MainMenu();
 void Login();
-int adminmain();
-int adminmenu();
+int AdminMain();
+int AdminMenu();
+int CustomerMain();
+int CustomerMenu();
 #endif

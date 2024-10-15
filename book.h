@@ -12,7 +12,6 @@ typedef struct {
 	bool state;		// 대여가능유무(True:가능 / False:불가능)
 }book;
 
-extern book** g_book;
-extern int numofbook;
-
+void Register_Book();
+book* Info_Input_Book();
 #endif

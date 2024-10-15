@@ -10,6 +10,5 @@ typedef struct {
 	cTime rtn;
 }borrow;
 
-extern borrow** g_borrow;
-extern int numofborrow;
+
 #endif

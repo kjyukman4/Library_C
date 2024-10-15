@@ -1,5 +1,8 @@
 #include "customer.h"
 
+extern customer** g_customer;
+extern int numofcustomer;
+
 /*-------------------------------------------------
  Join_Customer(): 회원가입
 -------------------------------------------------*/
@@ -14,7 +17,7 @@ void Join_Customer() {
 	if (g_customer[numofcustomer] != NULL) {
 		numofcustomer++;
 	}
-	Customer_Sort();
+	Sort_Customer();
 	//FinputC();
 }
 
@@ -45,7 +48,7 @@ customer* Register_Customer() {
 /*-------------------------------------------------
  Customer_Sort(): 회원을 학번순으로 정렬
 -------------------------------------------------*/
-void Customer_Sort() {
+void Sort_Customer() {
 	customer* min;
 	int i, j;
 
@@ -72,6 +75,6 @@ bool Dup_C_num(char* s) {
 			return true;
 		}
 	}
-	printf("이용가능한 아이디입니다.\n");
+	printf("회원가입이 완료되었습니다!\n");
 	return false;
 }

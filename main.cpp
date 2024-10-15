@@ -12,18 +12,18 @@ char Current_User[100];		//현재 접속한 유저 학번
 
 int main() {
 	system("color 02");
-	MM menu;
+	MM::MMENU menu;
 
 	g_book = (book**)malloc(sizeof(book*));
 	g_borrow = (borrow**)malloc(sizeof(borrow*));
 	g_customer = (customer**)malloc(sizeof(customer*));
 
-	while ((menu = (MM)mainmenu()) != EXIT) {
+	while ((menu = (MM::MMENU)MainMenu()) != MM::EXIT) {
 		switch (menu) {
-		case JOIN:
+		case MM::JOIN:
 			Join_Customer();
 			break;
-		case LOGIN: //ID:admin (관리자 로그인)
+		case MM::LOGIN: //ID:admin (관리자 로그인)
 			Login();
 			break;
 		default:
@@ -38,9 +38,9 @@ int main() {
 }
 
 /*-------------------------------------------------
- mainmain(): 메인메뉴
+ MainMain(): 메인메뉴
 -------------------------------------------------*/
-int mainmenu() {
+int MainMenu() {
 	int n;
 	printf("\n>> 도서관 서비스 <<\n");
 	printf("\n1. 회원가입\t 2. 로그인\t 3. 프로그램 종료\t \n");
@@ -61,7 +61,7 @@ void Login()
 	scanf("%s", id);
 	if (strcmp(id, "admin") == 0) {
 		strcpy(Current_User, "admin");
-		adminmain();
+		AdminMain();
 		return;
 	}
 	else {
@@ -70,7 +70,7 @@ void Login()
 		for (i = 0; i < numofcustomer; i++) {
 			if ((strcmp(id, g_customer[i]->num) == 0) && (strcmp(passward, g_customer[i]->pwd) == 0)) {
 				strcpy(Current_User, g_customer[i]->num);
-				//person(g_client[i]);
+				//CustomerMain();
 				return;
 
 			}
@@ -82,36 +82,36 @@ void Login()
 }
 
 /*-------------------------------------------------
- adminmain(): 관리자 메인
+ AdminMain(): 관리자 메인
 -------------------------------------------------*/
-int adminmain() {
-	AM menu;
+int AdminMain() {
+	AM::AMENU menu;
 	int i, k, state;
-	while (menu = (AM)adminmenu()) {
+	while (menu = (AM::AMENU)AdminMenu()) {
 		switch (menu) {
-		case REGISTER:
+		case AM::REGISTER:
 			//Register();
 			break;
-		case BDELETE:
+		case AM::BDELETE:
 			//Bdelete();
 			break;
-		case RENTAL:
+		case AM::RENTAL:
 			//Rental();
 			break;
-		case RETURN:
+		case AM::RETURN:
 			//Return();
 			break;
-		case SEARCH:
+		case AM::SEARCH:
 			/*
 			if ((state = search()) == 1) {
 				return 1;
 			}
 			*/
 			break;
-		case CLIST:
+		case AM::CLIST:
 			//Clist();
 			break;
-		case LOGOUT:
+		case AM::LOGOUT:
 			//strcpy(NUM, "");
 			return 0;
 		default:
@@ -122,13 +122,65 @@ int adminmain() {
 }
 
 /*-------------------------------------------------
- adminmain(): 관리자 메인
+ AdminMain(): 관리자 메뉴
 -------------------------------------------------*/
-int adminmenu() {
+int AdminMenu() {
 	int n;
 	system("cls");
 	printf("\n>> 관리자 메뉴 <<\n\n");
 	printf("\n1. 도서 등록\t 2. 도서 삭제\n3. 도서 대여\t 4. 도서 반납\n5. 도서 검색\t 6. 회원 목록\n7. 로그 아웃\t");
+	printf("\n번호를 선택하세요 :");
+	scanf("%d", &n);
+
+	return n;
+}
+
+/*-------------------------------------------------
+ CustomerMain(): 회원 메인
+-------------------------------------------------*/
+int CustomerMain() {
+	CM::CMENU menu;
+	int state;
+	while (1) {
+		switch (menu = (CM::CMENU)CustomerMenu()) {
+		case CM::SEARCH:
+			/*
+			if ((state = search()) == 1) {
+				return 1;
+			}
+			*/
+			break;
+		case CM::BLIST:
+			//Blist();
+			break;
+		case CM::MODIFY:
+			//modify();
+			break;
+		case CM::DELETE:
+			/*
+			if ((state = Cdelete()) == 1) {
+				return 0;
+			}
+			*/
+		case CM::LOGOUT:
+			//strcpy(NUM, "");
+			return 0;
+		case CM::QUIT:
+			return 1;
+		default:
+			printf("잘못입력\n");
+		}
+	}
+	return 0;
+}
+
+/*-------------------------------------------------
+ CustomerMenu(): 회원 메뉴
+-------------------------------------------------*/
+int CustomerMenu() {
+	int n;
+	printf("\n>> 회원 메뉴 <<\n\n");
+	printf("1. 도서 검색\t 2. 대여 목록\n3. 개인정보수정\t 4. 회원 탈퇴\n5. 로그 아웃\t 6. 프로그램 종료 \n");
 	printf("\n번호를 선택하세요 :");
 	scanf("%d", &n);
 
