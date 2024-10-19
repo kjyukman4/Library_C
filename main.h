@@ -3,21 +3,13 @@
 #include "book.h"
 #include "borrow.h"
 #include "customer.h"
+#include "admin.h"
 
-namespace MM { 
-	enum MMENU { JOIN = 1, LOGIN, EXIT }; 
-}
-namespace AM {
-	enum AMENU{ REGISTER = 1, BDELETE, RENTAL, RETURN, SEARCH, CLIST, LOGOUT };
-}
-namespace CM {
-	enum CMENU { SEARCH = 1, BLIST, MODIFY, DELETE, LOGOUT, QUIT };
+namespace MM {
+	enum MENU { JOIN = 1, LOGIN, QUIT };
 }
 
 int MainMenu();
 void Login();
-int AdminMain();
-int AdminMenu();
-int CustomerMain();
-int CustomerMenu();
+
 #endif
