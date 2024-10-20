@@ -4,7 +4,7 @@
 -------------------------------------------------*/
 int AdminMain() {
 	AM::MENU menu;
-	int i, k, state;
+	
 	while (menu = (AM::MENU)AdminMenu()) {
 		switch (menu) {
 		case AM::REGISTER:

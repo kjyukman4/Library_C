@@ -14,9 +14,21 @@ int main() {
 	system("color 02");
 	MM::MENU menu;
 
+	FILE* ocp;
+	FILE* obkp;
+	FILE* obp;
+
 	g_book = (book**)malloc(sizeof(book*));
 	g_borrow = (borrow**)malloc(sizeof(borrow*));
 	g_customer = (customer**)malloc(sizeof(customer*));
+	
+	Call_Book();
+	Call_Borrow();
+	Call_Customer();
+	
+	printf("numofbook:%d\n", numofbook);
+	printf("numofborrow:%d\n", numofborrow);
+	printf("numofcustomer:%d\n\n", numofcustomer);
 
 	while ((menu = (MM::MENU)MainMenu()) != MM::QUIT) {
 		switch (menu) {

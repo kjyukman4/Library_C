@@ -1,7 +1,6 @@
 #ifndef __BORROW__
 #define __BORROW__
 #include "common.h"
-#include "etc.h"
 #include "book.h"
 
 void Rental_Main();

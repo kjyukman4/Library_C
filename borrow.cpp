@@ -79,8 +79,8 @@ int Rental_Book() {
 					g_borrow[numofborrow] = Borrow(i, j);
 					g_book[j]->state = false;
 					numofborrow++;
-					//FinputBK();
-					//FinputB();
+					Finput_Book();
+					Finput_Borrow();
 					break;
 				}
 			}
@@ -121,16 +121,15 @@ borrow* Borrow(int i, int N) {
  Return_Main(): 도서 반납
 -----------------------------------------------------------*/
 int Return_Main() {
-	int P = 0, i = 0, j = 0, k;
+	int i = 0, j = 0;
 	bool P = false;
 	char num[100];
-	double Bnum;
+
 	printf(">> 도서 반납 <<\n");
 	printf("학번을 입력하세요:");
 	scanf("%s", num);
 	while (i < numofborrow) {
 		if (strcmp(num, g_borrow[i]->num) == 0 && g_borrow[i]->state == false) {
-			printf("\n>> 회원의 대여 목록 <<\n\n");
 			P = true;
 			Search_Borrow(num);
 			Return_Borrow();
@@ -150,6 +149,7 @@ int Return_Main() {
 void Search_Borrow(char* num) {
 	int i,j;
 	i = 0;
+	printf("\n>> 회원의 대여 목록 <<\n\n");
 	while (i < numofborrow) {
 		if (strcmp(num, g_borrow[i]->num) == 0 && g_borrow[i]->state == false) {
 			for (j = 0; j < numofbook; j++) {
@@ -180,8 +180,8 @@ void Return_Borrow() {
 					printf("도서를 반납하였습니다.\n");
 					g_book[i]->state = true;
 					g_borrow[j]->state = true;
-					//FinputBK();
-					//FinputB();
+					Finput_Book();
+					Finput_Book();
 					return;
 				}
 				j++;

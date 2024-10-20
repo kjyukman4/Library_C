@@ -1,37 +1,34 @@
 #include "customer.h"
 
 extern book** g_book;
+extern borrow** g_borrow;
 extern customer** g_customer;
 extern int numofbook;
+extern int numofborrow;
 extern int numofcustomer;
+extern char Current_User[100];
 
 /*-------------------------------------------------
  CustomerMain(): 회원 메인
 -------------------------------------------------*/
 int CustomerMain() {
 	CM::MENU menu;
-	int state;
+
 	while (menu = (CM::MENU)CustomerMenu()) {
 		switch (menu) {
 		case CM::SEARCH:
-			/*
-			if ((state = search()) == 1) {
-				return 1;
-			}
-			*/
+			Search_Main();
 			break;
 		case CM::BLIST:
-			//Blist();
+			Search_Borrow(Current_User);
 			break;
 		case CM::MODIFY:
-			//modify();
+			Modify_Customer();
 			break;
 		case CM::DELETE:
-			/*
-			if ((state = Cdelete()) == 1) {
+			if (Delete_Customer() == 1) {
 				return 0;
 			}
-			*/
 		case CM::LOGOUT:
 			printf("로그아웃합니다.\n");
 			return 0;
@@ -136,7 +133,7 @@ bool Dup_C_num(char* s) {
 -----------------------------------------------------------*/
 void Customer_Search_Main() {
 	CSM::MENU menu;
-	int i, j = 0;
+
 	char name[100];
 	if (numofcustomer != 0) {
 		while (1) {
@@ -186,7 +183,7 @@ int Customer_Search_Menu() {
 		  <1> 학번 검색
 		  <2> 전체 검색
 -----------------------------------------------------------*/
-int Search_Customer(char* name, int state) {
+void Search_Customer(char* name, int state) {
 	int i, j = 0;
 	
 	printf(">> 검색 결과 <<\n\n");
@@ -215,4 +212,81 @@ int Search_Customer(char* name, int state) {
 	if (j == numofbook) {
 		printf("등록된 회원이 없습니다.\n");
 	}
+}
+
+/*-----------------------------------------------------------
+ Modify_Customer(char*, int state): 고객 정보 수정
+-----------------------------------------------------------*/
+void Modify_Customer() {
+	int i = 0;
+	char pwd[100], adr[100], Pnum[100];
+	printf("\n---현재 당신의 정보---\n\n");
+	while (i < numofcustomer) {
+		if (strcmp(Current_User, g_customer[i]->num) == 0) {
+			break;
+		}
+		i++;
+	}
+	printf("학번:%s\tpassward:%s\n이름:%s\tadress:%s\n전화번호:%s\n", g_customer[i]->num, g_customer[i]->pwd, g_customer[i]->name, g_customer[i]->adr, g_customer[i]->Pnum);
+	printf("\n---정보 수정 입력---\n\n");
+	printf("비밀번호:");
+	scanf("%s", pwd);
+	printf("주소:");
+	scanf("%s", adr);
+	printf("전화번호:");
+	scanf("%s", Pnum);
+	strcpy(g_customer[i]->pwd, pwd);
+	strcpy(g_customer[i]->adr, adr);
+	strcpy(g_customer[i]->Pnum, Pnum);
+	printf("\n정보가 수정되었습니다.\n\n");
+}
+
+/*-----------------------------------------------------------
+ Modify_Customer(char*, int state): 고객 삭제
+-----------------------------------------------------------*/
+int Delete_Customer() {
+	int P = 0, i = 0, j;
+	char c;
+	printf("계정을 삭제하시겠습니까?<Y/N>\n\n");
+	fflush(stdin);
+	scanf("%c", &c);
+	if (c == 'Y') {
+		while (i < numofborrow) {
+			if (strcmp(Current_User, g_borrow[i]->num) == 0 && g_borrow[i]->state == false) {
+				printf("삭제 실패(사유:도서 미반납)");
+				break;
+			}
+			i++;
+		}
+		if (i == numofborrow) {
+			if (numofcustomer == 1) {
+				g_customer[0] = NULL;
+				numofcustomer--;
+				printf("계정이 삭제되었습니다.\n초기화면으로 돌아갑니다..\n\n");
+				Finput_Customer();
+				return 1;
+			}
+			else {
+				for (i = 0; i < numofcustomer; i++) {
+					if (strcmp(Current_User, g_customer[i]->num) == 0) {
+						break;
+					}
+				}
+				for (j = i; j < numofcustomer; j++) {
+					g_customer[j] = g_customer[j + 1];
+				}
+				g_customer = (customer**)realloc(g_customer, (numofcustomer - 1) * sizeof(customer*));
+				numofcustomer--;
+				strcpy(Current_User, "");
+				printf("계정이 삭제되었습니다.\n초기화면으로 돌아갑니다..\n\n");
+				Sort_Customer();
+				Finput_Customer();
+				return 1;
+			}
+		}
+	}
+	else {
+		printf("취소합니다..\n");
+	}
+	return 0;
 }

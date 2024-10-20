@@ -1,6 +1,7 @@
 #ifndef __CUSTOMER__
 #define __CUSTOMER__
 #include "common.h"
+#include "borrow.h"
 
 namespace CM {
 	enum MENU { SEARCH = 1, BLIST, MODIFY, DELETE, LOGOUT };
@@ -16,5 +17,7 @@ void Sort_Customer();
 bool Dup_C_num(char*);
 void Customer_Search_Main();
 int Customer_Search_Menu();
-int Search_Customer(char*,int);
+void Search_Customer(char*,int);
+void Modify_Customer();
+int Delete_Customer();
 #endif

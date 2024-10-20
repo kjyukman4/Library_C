@@ -1,6 +1,7 @@
 #ifndef __BOOK__
 #define __BOOK__
 #include "common.h"
+#include "etc.h"
 
 namespace BM {
 	enum MENU { NAME = 1, ISBN, QUIT };
@@ -17,6 +18,5 @@ int Delete_Book();
 void Search_Main();
 int Search_Menu();
 int Search_Book(char *, int);
-
 
 #endif
