@@ -3,12 +3,6 @@
 #include "common.h"
 #include "etc.h"
 
-namespace BM {
-	enum MENU { NAME = 1, ISBN, QUIT };
-}
-namespace BSM {
-	enum MENU { NAME = 1, COMPANY, ISBN, WRITER, ALL, QUIT };
-}
 void Register_Book();
 book* Info_Input_Book();
 void Delete_Book_Main();

@@ -3,12 +3,6 @@
 #include "common.h"
 #include "borrow.h"
 
-namespace CM {
-	enum MENU { SEARCH = 1, BLIST, MODIFY, DELETE, LOGOUT };
-}
-namespace CSM {
-	enum MENU { NAME = 1, NUM, ALL, QUIT };
-}
 int CustomerMain();
 int CustomerMenu();
 void Join_Customer();

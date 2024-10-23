@@ -1,5 +1,12 @@
 #include "book.h"
 
+namespace BM {
+	enum MENU { NAME = 1, ISBN, QUIT };
+}
+namespace BSM {
+	enum MENU { NAME = 1, COMPANY, ISBN, WRITER, ALL, QUIT };
+}
+
 extern book** g_book;
 extern borrow** g_borrow;
 extern int numofbook;

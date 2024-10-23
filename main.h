@@ -5,9 +5,6 @@
 #include "customer.h"
 #include "admin.h"
 
-namespace MM {
-	enum MENU { JOIN = 1, LOGIN, QUIT };
-}
 
 int MainMenu();
 void Login();

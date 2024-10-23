@@ -1,5 +1,9 @@
 #include "main.h"
 
+namespace MM {
+	enum MENU { JOIN = 1, LOGIN, QUIT };
+}
+
 book** g_book;
 borrow** g_borrow;
 customer** g_customer;

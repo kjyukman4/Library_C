@@ -1,5 +1,12 @@
 #include "customer.h"
 
+namespace CM {
+	enum MENU { SEARCH = 1, BLIST, MODIFY, DELETE, LOGOUT };
+}
+namespace CSM {
+	enum MENU { NAME = 1, NUM, ALL, QUIT };
+}
+
 extern book** g_book;
 extern borrow** g_borrow;
 extern customer** g_customer;

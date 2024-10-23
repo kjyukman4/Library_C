@@ -4,7 +4,6 @@
 #include "common.h"
 
 cTime Current_Time();
-
 void Finput_Book();
 void Finput_Borrow();
 void Finput_Customer();
