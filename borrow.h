@@ -10,4 +10,5 @@ borrow* Borrow(int, int);
 int Return_Main();
 void Search_Borrow(char *);
 void Return_Borrow();
+void Delete_Borrow(double );
 #endif

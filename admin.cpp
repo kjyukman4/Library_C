@@ -6,6 +6,7 @@ int AdminMain() {
 	AM::MENU menu;
 	
 	while (menu = (AM::MENU)AdminMenu()) {
+		system("cls");
 		switch (menu) {
 		case AM::REGISTER:
 			Register_Book();
@@ -41,7 +42,6 @@ int AdminMain() {
 -------------------------------------------------*/
 int AdminMenu() {
 	int n;
-	system("cls");
 	printf("\n>> 관리자 메뉴 <<\n\n");
 	printf("\n1. 도서 등록\t 2. 도서 삭제\n3. 도서 대여\t 4. 도서 반납\n5. 도서 검색\t 6. 회원 목록\n7. 로그 아웃\t");
 	printf("\n번호를 선택하세요 :");

@@ -15,6 +15,7 @@ int CustomerMain() {
 	CM::MENU menu;
 
 	while (menu = (CM::MENU)CustomerMenu()) {
+		system("cls");
 		switch (menu) {
 		case CM::SEARCH:
 			Search_Main();
@@ -67,7 +68,7 @@ void Join_Customer() {
 		numofcustomer++;
 	}
 	Sort_Customer();
-	//FinputC();
+	Finput_Customer();
 }
 
 /*-------------------------------------------------
@@ -90,6 +91,9 @@ customer* Register_Customer() {
 	scanf("%s", c->adr);
 	printf("전화번호:");
 	scanf("%s", c->Pnum);
+
+	system("cls");
+	printf("회원가입이 완료되었습니다!!\n");
 
 	return c;
 }
@@ -120,11 +124,12 @@ bool Dup_C_num(char* s) {
 	int i;
 	for (i = 0; i < numofcustomer; i++) {
 		if (strcmp(g_customer[i]->num, s) == 0) {
+			system("cls");
 			printf("회원가입이 불가합니다.(사유:학번동일)\n");
 			return true;
 		}
 	}
-	printf("회원가입이 완료되었습니다!\n");
+	printf("회원가입이 가능합니다!\n");
 	return false;
 }
 
@@ -136,8 +141,9 @@ void Customer_Search_Main() {
 
 	char name[100];
 	if (numofcustomer != 0) {
-		while (1) {
-			switch (menu = (CSM::MENU)Customer_Search_Menu()) {
+		while (menu = (CSM::MENU)Customer_Search_Menu()) {
+			system("cls");
+			switch (menu) {
 			case CSM::NAME:
 				printf("이름 입력:");
 				scanf("%s", name);
@@ -238,7 +244,9 @@ void Modify_Customer() {
 	strcpy(g_customer[i]->pwd, pwd);
 	strcpy(g_customer[i]->adr, adr);
 	strcpy(g_customer[i]->Pnum, Pnum);
+	system("cls");
 	printf("\n정보가 수정되었습니다.\n\n");
+	Finput_Customer();
 }
 
 /*-----------------------------------------------------------
@@ -247,12 +255,13 @@ void Modify_Customer() {
 int Delete_Customer() {
 	int P = 0, i = 0, j;
 	char c;
-	printf("계정을 삭제하시겠습니까?<Y/N>\n\n");
-	fflush(stdin);
+	printf("계정을 삭제하시겠습니까?<Y/N> : ");
+	getchar();
 	scanf("%c", &c);
 	if (c == 'Y') {
 		while (i < numofborrow) {
 			if (strcmp(Current_User, g_borrow[i]->num) == 0 && g_borrow[i]->state == false) {
+				system("cls");
 				printf("삭제 실패(사유:도서 미반납)");
 				break;
 			}
@@ -262,6 +271,7 @@ int Delete_Customer() {
 			if (numofcustomer == 1) {
 				g_customer[0] = NULL;
 				numofcustomer--;
+				system("cls");
 				printf("계정이 삭제되었습니다.\n초기화면으로 돌아갑니다..\n\n");
 				Finput_Customer();
 				return 1;
@@ -278,6 +288,7 @@ int Delete_Customer() {
 				g_customer = (customer**)realloc(g_customer, (numofcustomer - 1) * sizeof(customer*));
 				numofcustomer--;
 				strcpy(Current_User, "");
+				system("cls");
 				printf("계정이 삭제되었습니다.\n초기화면으로 돌아갑니다..\n\n");
 				Sort_Customer();
 				Finput_Customer();
@@ -286,6 +297,7 @@ int Delete_Customer() {
 		}
 	}
 	else {
+		system("cls");
 		printf("취소합니다..\n");
 	}
 	return 0;

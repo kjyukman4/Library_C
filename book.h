@@ -11,10 +11,9 @@ namespace BSM {
 }
 void Register_Book();
 book* Info_Input_Book();
-void Sort_Book();
 void Delete_Book_Main();
 int Delete_Book_Menu();
-int Delete_Book();
+void Delete_Book();
 void Search_Main();
 int Search_Menu();
 int Search_Book(char *, int);

@@ -5,6 +5,7 @@ extern customer** g_customer;
 extern int numofbook;
 extern int numofborrow;
 extern int numofcustomer;
+extern int Unique_Book_Num;
 
 /*-------------------------------------------------
  Current_Time(): 현재(시스템) 시간
@@ -50,7 +51,7 @@ void Finput_Borrow() {
 	int i = 0;
 	ibp = fopen("borrow.txt", "w");
 	while (i < numofborrow) {
-		fprintf(ibp, "%s %s %.lf %d %d %d %d %d %d %d %d %d %d %d %d\n", g_borrow[i]->num, g_borrow[i]->state, g_borrow[i]->Bnum, g_borrow[i]->rnt.year, g_borrow[i]->rnt.month,
+		fprintf(ibp, "%s %d %.lf %d %d %d %d %d %d %d %d %d %d %d %d\n", g_borrow[i]->num, g_borrow[i]->state, g_borrow[i]->Bnum, g_borrow[i]->rnt.year, g_borrow[i]->rnt.month,
 			g_borrow[i]->rnt.day, g_borrow[i]->rnt.hour, g_borrow[i]->rnt.minute, g_borrow[i]->rnt.second, g_borrow[i]->rtn.year, g_borrow[i]->rtn.month, g_borrow[i]->rtn.day,
 			g_borrow[i]->rtn.hour, g_borrow[i]->rtn.minute, g_borrow[i]->rtn.second);
 		i++;
@@ -78,6 +79,7 @@ void Finput_Customer() {
 void Call_Book() {
 	FILE* obkp;
 	obkp = fopen("book.txt", "r");
+	Unique_Book_Num = 1;
 	if (obkp != NULL) {
 		printf("도서목록 불러오기 완료!\n");
 		while (1) {
@@ -93,6 +95,7 @@ void Call_Book() {
 			}
 			else {
 				numofbook++;
+				Unique_Book_Num++;
 			}
 		}
 		fclose(obkp);
@@ -106,7 +109,7 @@ void Call_Borrow() {
 	FILE* obp;
 	obp = fopen("borrow.txt", "r");
 	if (obp != NULL) {
-		printf("대여목록 불러오기 완료!\n\n");
+		printf("대여목록 불러오기 완료!\n");
 		while (1) {
 			if (numofborrow == 0) {
 				g_borrow[0] = (borrow*)malloc(sizeof(borrow));
@@ -134,7 +137,7 @@ void Call_Customer() {
 	FILE* ocp;
 	ocp = fopen("customer.txt", "r");
 	if (ocp != NULL) {
-		printf("회원목록 불러오기 완료!\n");
+		printf("회원목록 불러오기 완료!\n\n");
 		while (1) {
 			if (numofcustomer == 0) {
 				g_customer[0] = (customer*)malloc(sizeof(customer));

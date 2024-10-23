@@ -14,28 +14,30 @@ void Rental_Main() {
 	BM::MENU menu;
 	char Bname[100];
 
-	while (menu = (BM::MENU)Rental_Menu()) {}
-	switch (menu) {
-	case BM::NAME:
-		printf("도서명 입력:");
-		scanf("%s", Bname);
-		if (Search_Book(Bname, 0) != 1) {
-			Rental_Book();
+	while (menu = (BM::MENU)Rental_Menu()) {
+		system("cls");
+		switch (menu) {
+		case BM::NAME:
+			printf("도서명 입력:");
+			scanf("%s", Bname);
+			if (Search_Book(Bname, 0) != 1) {
+				Rental_Book();
+			}
+			break;
+		case BM::ISBN:
+			printf("ISBN 입력:");
+			scanf("%s", Bname);
+			if (Search_Book(Bname, 2) != 1) {
+				Rental_Book();
+			}
+			break;
+		case BM::QUIT:
+			printf("도서 대여 취소");
+			return;
+		default:
+			printf("\n잘못된 값을 입력하였습니다.\n");
+			break;
 		}
-		break;
-	case BM::ISBN:
-		printf("ISBN 입력:");
-		scanf("%s", Bname);
-		if (Search_Book(Bname, 2) != 1) {
-			Rental_Book();
-		}
-		break;
-	case BM::QUIT:
-		printf("도서 대여 취소");
-		return ;
-	default:
-		printf("\n잘못된 값을 입력하였습니다.\n");
-		break;
 	}
 }
 
@@ -50,7 +52,7 @@ int Rental_Menu() {
 	printf("번호를 입력하세요:");
 	scanf("%d", &n);
 
-	return 0;
+	return n;
 }
 
 /*-----------------------------------------------------------
@@ -69,29 +71,38 @@ int Rental_Book() {
 			j = 0;
 			for (j = 0; j < numofbook; j++) {
 				if (Bnum == g_book[j]->Bnum) {
-					printf("도서를 대여하였습니다.\n");
-					if (numofborrow == 0) {
-						g_borrow[0] = (borrow*)malloc(sizeof(borrow));
+					if (g_book[j]->state == true) {
+						system("cls");
+						printf("도서를 대여하였습니다.\n");
+						if (numofborrow == 0) {
+							g_borrow[0] = (borrow*)malloc(sizeof(borrow));
+						}
+						else {
+							g_borrow = (borrow**)realloc(g_borrow, (numofborrow + 1) * sizeof(borrow*));
+						}
+						g_borrow[numofborrow] = Borrow(i, j);
+						g_book[j]->state = false;
+						numofborrow++;
+						Finput_Book();
+						Finput_Borrow();
+						break;
 					}
 					else {
-						g_borrow = (borrow**)realloc(g_borrow, (numofborrow + 1) * sizeof(borrow*));
+						system("cls");
+						printf("대여 할 수없는 도서입니다..\n");
+						break;
 					}
-					g_borrow[numofborrow] = Borrow(i, j);
-					g_book[j]->state = false;
-					numofborrow++;
-					Finput_Book();
-					Finput_Borrow();
-					break;
 				}
 			}
 			if (j == numofbook) {
 				printf("다시입력하세요.\n");
-				break;
 			}
+			break;
 		}
 		i++;
 	}
 	if (i == numofcustomer) {
+		system("cls");
 		printf("일치하는 회원이없습니다.\n");
 	}
 	return 0;
@@ -138,6 +149,7 @@ int Return_Main() {
 		i++;
 	}
 	if (P == false) {
+		system("cls");
 		printf("반납할 도서가없습니다.\n");
 		return 1;
 	}
@@ -177,16 +189,46 @@ void Return_Borrow() {
 			j = 0;
 			while (j < numofborrow) {
 				if (Bnum == g_borrow[j]->Bnum && g_borrow[i]->state == false) {
+					system("cls");
 					printf("도서를 반납하였습니다.\n");
 					g_book[i]->state = true;
-					g_borrow[j]->state = true;
+					Delete_Borrow(Bnum);
 					Finput_Book();
-					Finput_Book();
+					Finput_Borrow();
 					return;
 				}
 				j++;
 			}
 		}
 		i++;
+	}
+	if (i == numofbook) {
+		system("cls");
+		printf("존재하지않는 도서 입니다\n");
+	}
+}
+
+/*-----------------------------------------------------------
+ Delete_Borrow(): 빌린 도서 삭제
+-----------------------------------------------------------*/
+void Delete_Borrow(double Bnum) {
+	int i,j,k;
+
+	if (numofborrow == 1) {
+		g_borrow[0] = NULL;
+		numofborrow--;
+	}
+	else {
+		for (i = 0; i < numofborrow; i++) {
+			if (Bnum == g_borrow[i]->Bnum) {
+				break;
+			}
+		}
+		
+		for (j = i; j < numofborrow - 1; j++) {
+			g_borrow[j] = g_borrow[j + 1];
+		}
+		g_borrow = (borrow**)realloc(g_borrow, (numofborrow - 1) * sizeof(borrow*));
+		numofborrow--;
 	}
 }

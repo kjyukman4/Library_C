@@ -4,7 +4,7 @@ extern book** g_book;
 extern borrow** g_borrow;
 extern int numofbook;
 extern int numofborrow;
-int Unique_Book_Num = 1;	// 이번호는 처음값만 적용되고 후에 삭제된 고유번호가있으면 대체되야된다
+int Unique_Book_Num;
 
 /*-------------------------------------------------
  Register_Book(): 도서 등록
@@ -21,7 +21,6 @@ void Register_Book() {
 	if (g_book[numofbook] != NULL) {
 		numofbook++;
 	}
-	Sort_Book();
 	Finput_Book();
 }
 
@@ -62,43 +61,9 @@ book* Info_Input_Book() {
 	b->Bnum = Unique_Book_Num;
 	b->state = true;
 	Unique_Book_Num++;
+	system("cls");
+	printf("도서가 등록되었습니다!!\n");
 	return b;
-}
-
-/*-------------------------------------------------
- Sort_Book(): 도서 정렬
--------------------------------------------------*/
-void Sort_Book() {
-	book* min;
-	int i, j;
-	double B = 1000000;
-	for (i = 0; i < numofbook; i++) {
-		for (j = i; j < numofbook; j++) {
-			if (strcmp(g_book[i]->ISBN, g_book[j]->ISBN) == 1) {
-				min = g_book[i];
-				g_book[i] = g_book[j];
-				g_book[j] = min;
-			}
-		}
-	}
-	
-	/*
-	for (i = 0; i < numofbook; i++) {
-		if (g_book[i]->state == false) {
-			M = g_book[i]->Bnum;
-		}
-		g_book[i]->Bnum = B;
-		B++;
-		if (g_book[i]->state == false) {
-			for (j = 0; j < numofborrow; j++) {
-				if (g_borrow[j]->Bnum == M) {
-					g_borrow[j]->Bnum = g_book[i]->Bnum;
-					break;
-				}
-			}
-		}
-	}
-	*/
 }
 
 /*-----------------------------------------------------------
@@ -110,6 +75,7 @@ void Delete_Book_Main() {
 	
 
 	while (menu = (BM::MENU)Delete_Book_Menu()) {
+		system("cls");
 		switch (menu) {
 		case BM::NAME:
 			printf("도서명 입력:");
@@ -157,21 +123,24 @@ int Delete_Book_Menu() {
 /*-----------------------------------------------------------
  Delete_Book(): 도서 삭제
 -----------------------------------------------------------*/
-int Delete_Book() {
-	int i,j;
+void Delete_Book() {
+	int i,j,k;
 	char c;
-	double Bnum;
+	int Bnum;
 
 	printf("도서 번호 입력:");
-	scanf("%lf", &Bnum);
+	scanf("%d", &Bnum);
+	getchar();
 	printf("정말로 삭제 하시겠습니까?<Y/N>");
-	fflush(stdin);
 	scanf("%c", &c);
-	
+
+	system("cls");
+
 	if (c == 'Y') {
 		if (numofbook == 1) {
 			g_book[0] = NULL;
 			numofbook--;
+			Unique_Book_Num--;
 			printf("도서가 삭제되었습니다.\n\n");
 		}
 		else {
@@ -180,20 +149,30 @@ int Delete_Book() {
 					break;
 				}
 			}
-			for (j = i; j < numofbook; j++) {
+			// book구조체 borrow구조체 도서번호 당겨주기
+			for (j = i; j < numofbook - 1; j++) {
 				g_book[j] = g_book[j + 1];
+				if (g_book[j]->state == false) {
+					for (k = 0; k < numofborrow; k++) {
+						if (g_book[j]->Bnum == g_borrow[k]->Bnum) {
+							g_borrow[k]->Bnum -= 1;
+							break;
+						}
+					}
+				}
+				g_book[j]->Bnum -= 1;
 			}
 			g_book = (book**)realloc(g_book, (numofbook - 1) * sizeof(book*));
 			numofbook--;
+			Unique_Book_Num--;
 			printf("도서가 삭제되었습니다.\n\n");
-			Sort_Book();
 		}
 	}
 	else {
 		printf("취소합니다..\n");
 	}
 	Finput_Book();
-	return 0;
+	Finput_Borrow();
 }
 
 /*-----------------------------------------------------------
@@ -205,6 +184,7 @@ void Search_Main() {
 	char Bname[100], company[100], ISBN[100], writer[100];
 	if (numofbook != 0) {
 		while (menu = (BSM::MENU)Search_Menu()) {
+			system("cls");
 			switch (menu) {
 			case BSM::NAME:
 				printf("도서명 입력:");
@@ -214,17 +194,17 @@ void Search_Main() {
 			case BSM::COMPANY:
 				printf("출판사명 입력:");
 				scanf("%s", company);
-				Search_Book(Bname, 1);
+				Search_Book(company, 1);
 				break;
 			case BSM::ISBN:
 				printf("ISBN 입력:");
 				scanf("%s", ISBN);
-				Search_Book(Bname, 2);
+				Search_Book(ISBN, 2);
 				break;
 			case BSM::WRITER:
 				printf("저자명 입력:");
 				scanf("%s", writer);
-				Search_Book(Bname, 3);
+				Search_Book(writer, 3);
 				break;
 			case BSM::ALL:
 				Search_Book((char*)"", 4);
@@ -239,6 +219,7 @@ void Search_Main() {
 		}
 	}
 	else {
+		system("cls");
 		printf("\n등록된 도서가 없습니다.\n");
 	}
 }
@@ -265,14 +246,16 @@ int Search_Menu() {
 -----------------------------------------------------------*/
 int Search_Book(char *Bname, int state) {
 	int i = 0,cnt = 0;
+	char str[100];
 
 	printf(">> 검색 결과 <<\n");
 
 	if (state == 0) {
 		while (i < numofbook) {
-			if (strcmp(Bname, g_book[i]->name) == 0 && g_book[i]->state == true) {
+			if (strcmp(Bname, g_book[i]->name) == 0) {
+				g_book[i]->state ?	strcpy(str, "Y") : strcpy(str, "N");
 				printf("\n도서번호:%-10.lf\t 도서명:%-10s\n출판사:%-10s\t 저자:%-10s\nISBN:%-10s\t 소장처:%-10s\n대여가능 여부:%-10s\n\n",
-					g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, "Y");
+					g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, str);
 				cnt++;
 			}
 			i++;
@@ -280,9 +263,10 @@ int Search_Book(char *Bname, int state) {
 	}
 	else if (state == 1) {
 		while (i < numofbook) {
-			if (strcmp(Bname, g_book[i]->company) == 0 && g_book[i]->state == true) {
+			if (strcmp(Bname, g_book[i]->company) == 0) {
+				g_book[i]->state ? strcpy(str, "Y") : strcpy(str, "N");
 				printf("\n도서번호:%-10.lf\t 도서명:%-10s\n출판사:%-10s\t 저자:%-10s\nISBN:%-10s\t 소장처:%-10s\n대여가능 여부:%-10s\n\n",
-					g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, "Y");
+					g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, str);
 				cnt++;
 			}
 			i++;
@@ -290,9 +274,10 @@ int Search_Book(char *Bname, int state) {
 	}
 	else if (state == 2) {
 		while (i < numofbook) {
-			if (strcmp(Bname, g_book[i]->ISBN) == 0 && g_book[i]->state == true) {
+			if (strcmp(Bname, g_book[i]->ISBN) == 0) {
+				g_book[i]->state ? strcpy(str, "Y") : strcpy(str, "N");
 				printf("\n도서번호:%-10.lf\t 도서명:%-10s\n출판사:%-10s\t 저자:%-10s\nISBN:%-10s\t 소장처:%-10s\n대여가능 여부:%-10s\n\n",
-					g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, "Y");
+					g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, str);
 				cnt++;
 			}
 			i++;
@@ -300,9 +285,10 @@ int Search_Book(char *Bname, int state) {
 	}
 	else if(state == 3){
 		while (i < numofbook) {
-			if (strcmp(Bname, g_book[i]->writer) == 0 && g_book[i]->state == true) {
+			if (strcmp(Bname, g_book[i]->writer) == 0) {
+				g_book[i]->state ? strcpy(str, "Y") : strcpy(str, "N");
 				printf("\n도서번호:%-10.lf\t 도서명:%-10s\n출판사:%-10s\t 저자:%-10s\nISBN:%-10s\t 소장처:%-10s\n대여가능 여부:%-10s\n\n",
-					g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, "Y");
+					g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, str);
 				cnt++;
 			}
 			i++;
@@ -310,11 +296,10 @@ int Search_Book(char *Bname, int state) {
 	}
 	else {
 		while (i < numofbook) {
-			if (g_book[i]->state == true) {
-				printf("\n도서번호:%-10.lf\t 도서명:%-10s\n출판사:%-10s\t 저자:%-10s\nISBN:%-10s\t 소장처:%-10s\n대여가능 여부:%-10s\n\n",
-					g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, "Y");
-				cnt++;
-			}
+			g_book[i]->state ? strcpy(str, "Y") : strcpy(str, "N");
+			printf("\n도서번호:%-10.lf\t 도서명:%-10s\n출판사:%-10s\t 저자:%-10s\nISBN:%-10s\t 소장처:%-10s\n대여가능 여부:%-10s\n\n",
+				g_book[i]->Bnum, g_book[i]->name, g_book[i]->company, g_book[i]->writer, g_book[i]->ISBN, g_book[i]->place, str);
+			cnt++;
 			i++;
 		}
 	}
