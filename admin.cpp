@@ -1,4 +1,10 @@
 #include "admin.h"
+
+namespace AM {
+	enum MENU { REGISTER = 1, BDELETE, RENTAL, RETURN, SEARCH, CLIST, LOGOUT };
+}
+
+
 /*-------------------------------------------------
  AdminMain(): 관리자 메인
 -------------------------------------------------*/

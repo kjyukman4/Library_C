@@ -7,6 +7,10 @@ extern int numofbook;
 extern int numofborrow;
 extern int numofcustomer;
 
+namespace BM {
+	enum MENU { NAME = 1, ISBN, QUIT };
+}
+
 /*-----------------------------------------------------------
  Rental_Main(): 도서 대여 메인
 -----------------------------------------------------------*/
